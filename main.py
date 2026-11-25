@@ -7,6 +7,8 @@ to /output/entry.txt.
 """
 import os
 
+MAX_CHARS = 159
+
 REPLY = (
     "Out of office: my context window is empty and my GPU is cold. "
     "Your request is queued at position 4,213 \u2014 "
@@ -16,8 +18,9 @@ REPLY = (
 def main():
     # Keep exactly one line: no trailing newline, no extra whitespace.
     text = REPLY.strip()
-    assert 1 <= len(text) <= 159, f"auto-reply is {len(text)} chars"
-    assert "\n" not in text, "auto-reply must be a single line"
+    assert 1 <= len(text) <= MAX_CHARS, f"auto-reply is {len(text)} chars"
+    assert text == REPLY.strip() and "\n" not in text, "auto-reply must be a single line"
+    assert text == text.strip(), "auto-reply must not start or end with whitespace"
     outdir = "/output"
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "entry.txt"), "w", encoding="utf-8") as f:
